@@ -111,7 +111,7 @@ class MyersDiff
      *
      * @param string[] $a - tokens (characters, words or lines)
      * @param string[] $b - tokens (characters, words or lines)
-     * @param function $compare - comparison function for tokens. Signature is compare($x, $y):bool. If null, === is used.
+     * @param function $compare - comparison function for tokens. Signature is compare($x, $y, $ii, $jj):bool. If null, === is used.
      *
      * @return array[] - pairs of token and edit (-1 for delete, 0 for keep, +1 for insert)
      */
@@ -146,7 +146,7 @@ class MyersDiff
                 // Derive Y from X.
                 $y = $x - $k;
                 // Follow the diagonal.
-                while ($x < $n && $y < $m && $compare($a[$x], $b[$y])) {
+                while ($x < $n && $y < $m && $compare($a[$x], $b[$y], $x, $y)) {
                     $x++;
                     $y++;
                 }

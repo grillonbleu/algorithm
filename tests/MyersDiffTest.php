@@ -253,4 +253,33 @@ class MyersDiffTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($diff, $algorithm->calculate($x, $y, $ignorecase));
     }
+
+    /**
+     * Test custom token comparison with index for checking context.
+     *
+     * @return void
+     */
+    public function testCustomCompareContext()
+    {
+        $algorithm = new MyersDiff();
+
+        $a = array('Lorem', ':', 'ipsum');
+        $b = array('Lorem', ':', 'Ipsum');
+
+        $ignorecaseaftercolon = function ($x, $y, $ii, $jj) use ($b) {
+            if(isset($b[$jj-1]) && ':' === $b[$jj-1]) {
+                return strtolower($x) === strtolower($y);
+            }
+
+            return $x === $y;
+        };
+
+        $diff = array(
+            array('Lorem', MyersDiff::KEEP),
+            array(':', MyersDiff::KEEP),
+            array('ipsum', MyersDiff::KEEP),
+        );
+
+        $this->assertSame($diff, $algorithm->calculate($a, $b, $ignorecaseaftercolon));
+    }
 }
